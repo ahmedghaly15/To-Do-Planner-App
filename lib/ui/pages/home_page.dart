@@ -115,8 +115,8 @@ class _HomePageState extends State<HomePage> {
               onTap: () async {
                 await Get.to(
                   () => const AddTaskPage(),
-                  transition: Transition.cupertinoDialog,
-                  duration: const Duration(milliseconds: 1500),
+                  transition: Transition.leftToRightWithFade,
+                  duration: const Duration(milliseconds: 400),
                   curve: Curves.easeIn,
                 );
                 _taskController.getTasks();
@@ -195,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                           _selectedDate.day)) {
                 return AnimationConfiguration.staggeredList(
                   position: index,
-                  duration: const Duration(milliseconds: 1200),
+                  duration: const Duration(milliseconds: 500),
                   child: SlideAnimation(
                     horizontalOffset: 300,
                     child: FadeInAnimation(

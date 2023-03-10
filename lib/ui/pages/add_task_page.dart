@@ -34,157 +34,162 @@ class _AddTaskPageState extends State<AddTaskPage> {
   @override
   Widget build(BuildContext context) {
 //============================= UI Of The Page =============================
-    return Scaffold(
-      backgroundColor: context.theme.colorScheme.background,
-      appBar: _appBar(),
-      body: SafeArea(
-        child: Container(
-          margin: const EdgeInsets.only(top: 5),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Text("Add Task", style: haedingStyle),
-                InputField(
-                  title: "Title",
-                  hint: "Enter title here",
-                  controller: _titleController,
-                ),
-                InputField(
-                  title: "Note",
-                  hint: "Enter note here",
-                  controller: _noteController,
-                ),
-                InputField(
-                  title: "Date",
-                  hint: DateFormat.yMd().format(_selectedDate),
-                  widget: IconButton(
-                    icon: const Icon(
-                      Icons.calendar_today_outlined,
-                      color: Colors.grey,
-                    ),
-                    onPressed: () => _getDateFromUser(),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: context.theme.colorScheme.background,
+        appBar: _appBar(),
+        body: SafeArea(
+          child: Container(
+            margin: const EdgeInsets.only(top: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Text("Add Task", style: haedingStyle),
+                  InputField(
+                    title: "Title",
+                    hint: "Enter title here",
+                    controller: _titleController,
                   ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: InputField(
-                        title: "Start Time",
-                        hint: _startTime,
-                        widget: IconButton(
-                          icon: const Icon(
-                            Icons.access_time_rounded,
-                            color: Colors.grey,
-                          ),
-                          onPressed: () => _getTimeFromUser(isStartTime: true),
-                        ),
+                  InputField(
+                    title: "Note",
+                    hint: "Enter note here",
+                    controller: _noteController,
+                  ),
+                  InputField(
+                    title: "Date",
+                    hint: DateFormat.yMd().format(_selectedDate),
+                    widget: IconButton(
+                      icon: const Icon(
+                        Icons.calendar_today_outlined,
+                        color: Colors.grey,
                       ),
+                      onPressed: () => _getDateFromUser(),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: InputField(
-                        title: "End Time",
-                        hint: _endTime,
-                        widget: IconButton(
-                          icon: const Icon(
-                            Icons.access_time_rounded,
-                            color: Colors.grey,
-                          ),
-                          onPressed: () => _getTimeFromUser(isStartTime: false),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                InputField(
-                  title: "Remind",
-                  hint: "$_selectedRemind minutes early",
-                  widget: Row(
+                  ),
+                  Row(
                     children: <Widget>[
-                      DropdownButton(
-                        dropdownColor: Colors.grey[500],
-                        borderRadius: BorderRadius.circular(10),
-                        items: remindList
-                            .map<DropdownMenuItem<String>>(
-                              (int value) => DropdownMenuItem<String>(
-                                value: value.toString(),
-                                child: Text(
-                                  "$value",
-                                  style: bodyStyle3,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Colors.grey,
+                      Expanded(
+                        child: InputField(
+                          title: "Start Time",
+                          hint: _startTime,
+                          widget: IconButton(
+                            icon: const Icon(
+                              Icons.access_time_rounded,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () =>
+                                _getTimeFromUser(isStartTime: true),
+                          ),
                         ),
-                        iconSize: 32,
-                        elevation: 4,
-                        underline: Container(height: 0),
-                        style: subTitleStyle,
-                        onChanged: (String? newVal) {
-                          setState(() {
-                            _selectedRemind = int.parse(newVal!);
-                          });
-                        },
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: InputField(
+                          title: "End Time",
+                          hint: _endTime,
+                          widget: IconButton(
+                            icon: const Icon(
+                              Icons.access_time_rounded,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () =>
+                                _getTimeFromUser(isStartTime: false),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                InputField(
-                  title: "Repeat",
-                  hint: _selectedRepeat,
-                  widget: Row(
-                    children: <Widget>[
-                      DropdownButton(
-                        borderRadius: BorderRadius.circular(10),
-                        dropdownColor: Colors.grey[500],
-                        items: repeatList
-                            .map<DropdownMenuItem<String>>(
-                              (String value) => DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: bodyStyle3,
+                  InputField(
+                    title: "Remind",
+                    hint: "$_selectedRemind minutes early",
+                    widget: Row(
+                      children: <Widget>[
+                        DropdownButton(
+                          dropdownColor: Colors.grey[500],
+                          borderRadius: BorderRadius.circular(10),
+                          items: remindList
+                              .map<DropdownMenuItem<String>>(
+                                (int value) => DropdownMenuItem<String>(
+                                  value: value.toString(),
+                                  child: Text(
+                                    "$value",
+                                    style: bodyStyle3,
+                                  ),
                                 ),
-                              ),
-                            )
-                            .toList(),
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Colors.grey,
+                              )
+                              .toList(),
+                          icon: const Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Colors.grey,
+                          ),
+                          iconSize: 32,
+                          elevation: 4,
+                          underline: Container(height: 0),
+                          style: subTitleStyle,
+                          onChanged: (String? newVal) {
+                            setState(() {
+                              _selectedRemind = int.parse(newVal!);
+                            });
+                          },
                         ),
-                        iconSize: 32,
-                        elevation: 4,
-                        underline: Container(height: 0),
-                        style: subTitleStyle,
-                        onChanged: (String? newVal) {
-                          setState(() {
-                            _selectedRepeat = newVal!;
-                          });
-                        },
-                      ),
-                      const SizedBox(width: 6),
+                        const SizedBox(width: 6),
+                      ],
+                    ),
+                  ),
+                  InputField(
+                    title: "Repeat",
+                    hint: _selectedRepeat,
+                    widget: Row(
+                      children: <Widget>[
+                        DropdownButton(
+                          borderRadius: BorderRadius.circular(10),
+                          dropdownColor: Colors.grey[500],
+                          items: repeatList
+                              .map<DropdownMenuItem<String>>(
+                                (String value) => DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: bodyStyle3,
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          icon: const Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Colors.grey,
+                          ),
+                          iconSize: 32,
+                          elevation: 4,
+                          underline: Container(height: 0),
+                          style: subTitleStyle,
+                          onChanged: (String? newVal) {
+                            setState(() {
+                              _selectedRepeat = newVal!;
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 6),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      _colorPalette(),
+                      MyButton(
+                          label: "Create Task",
+                          onTap: () {
+                            _validateData();
+                          }),
                     ],
                   ),
-                ),
-                const SizedBox(height: 18),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    _colorPalette(),
-                    MyButton(
-                        label: "Create Task",
-                        onTap: () {
-                          _validateData();
-                        }),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
