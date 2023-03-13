@@ -10,6 +10,8 @@ class InputField extends StatelessWidget {
     Key? key,
     required this.title,
     required this.hint,
+    required this.suggestions,
+    required this.capitalization,
     this.controller,
     this.widget,
   }) : super(key: key);
@@ -18,6 +20,8 @@ class InputField extends StatelessWidget {
   final String hint;
   final TextEditingController? controller;
   final Widget? widget;
+  final bool? suggestions;
+  final TextCapitalization? capitalization;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +45,8 @@ class InputField extends StatelessWidget {
                 Expanded(
                   child: TextFormField(
                     controller: controller,
+                    enableSuggestions: suggestions!,
+                    textCapitalization: capitalization!,
                     autofocus: false,
                     readOnly: widget != null ? true : false,
                     style: subTitleStyle,

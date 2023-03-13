@@ -21,7 +21,7 @@ class DBHelper {
           debugPrint("creating a new database");
           return db.execute('CREATE TABLE $_tableName('
               'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-              'title STRING, note TEXT, date STRING, '
+              'taskText TEXT, date STRING, '
               'startTime STRING, endTime STRING, '
               'remind INTEGER, repeat STRING, '
               'color INTEGER, '

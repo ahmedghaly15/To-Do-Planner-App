@@ -26,12 +26,16 @@ class TaskTile extends StatelessWidget {
           : SizeConfig.screenWidth,
       margin: EdgeInsets.only(bottom: getProportionateScreenHeight(12)),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.screenWidth * 0.05,
+          vertical: SizeConfig.screenHeight * 0.02,
+        ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: _getTaskClr(task.color),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Expanded(
               child: SingleChildScrollView(
@@ -39,15 +43,17 @@ class TaskTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      task.title!,
+                      task.taskText!,
                       style: GoogleFonts.lato(
-                          textStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      )),
+                        textStyle: const TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 1,
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: SizeConfig.screenHeight * 0.02),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
@@ -67,24 +73,17 @@ class TaskTile extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      task.note!,
-                      style: GoogleFonts.lato(
-                          textStyle: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey[100],
-                      )),
-                    ),
                   ],
                 ),
               ),
             ),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              height: 60,
-              width: 0.5,
-              color: Colors.grey[500]!.withOpacity(0.7),
+              margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.screenWidth * 0.01,
+              ),
+              height: SizeConfig.screenHeight * 0.08,
+              width: SizeConfig.screenWidth * 0.0015,
+              color: Colors.grey[300]!,
             ),
             RotatedBox(
               quarterTurns: 3,

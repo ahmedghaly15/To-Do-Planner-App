@@ -1,7 +1,6 @@
 class Task {
   int? id;
-  String? title;
-  String? note;
+  String? taskText;
   int? isCompleted;
   String? date;
   String? startTime;
@@ -9,10 +8,10 @@ class Task {
   int? color;
   int? remind;
   String? repeat;
+
   Task({
     this.id,
-    this.title,
-    this.note,
+    this.taskText,
     this.isCompleted,
     this.date,
     this.startTime,
@@ -26,8 +25,7 @@ class Task {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'title': title,
-      'note': note,
+      'taskText': taskText,
       'isCompleted': isCompleted,
       'date': date,
       'startTime': startTime,
@@ -42,8 +40,7 @@ class Task {
   factory Task.fromJson(Map<String, dynamic> map) {
     return Task(
       id: map['id'] != null ? map['id'] as int : null,
-      title: map['title'] != null ? map['title'] as String : null,
-      note: map['note'] != null ? map['note'] as String : null,
+      taskText: map['taskText'] != null ? map['taskText'] as String : null,
       isCompleted:
           map['isCompleted'] != null ? map['isCompleted'] as int : null,
       date: map['date'] != null ? map['date'] as String : null,

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../controllers/task_controller.dart';
 import '../../models/task.dart';
+import '../size_config.dart';
 import '../theme.dart';
 import '/ui/widgets/button.dart';
 import '/ui/widgets/input_field.dart';
@@ -18,8 +20,7 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   final TaskController _taskController = Get.put(TaskController());
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _taskFormController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   String _startTime = DateFormat('hh:mm a').format(DateTime.now()).toString();
   String _endTime = DateFormat('hh:mm a')
@@ -39,157 +40,171 @@ class _AddTaskPageState extends State<AddTaskPage> {
       child: Scaffold(
         backgroundColor: context.theme.colorScheme.background,
         appBar: _appBar(),
-        body: SafeArea(
-          child: Container(
-            margin: const EdgeInsets.only(top: 5),
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Text("Add Task", style: haedingStyle),
-                  InputField(
-                    title: "Title",
-                    hint: "Enter title here",
-                    controller: _titleController,
-                  ),
-                  InputField(
-                    title: "Note",
-                    hint: "Enter note here",
-                    controller: _noteController,
-                  ),
-                  InputField(
-                    title: "Date",
-                    hint: DateFormat.yMd().format(_selectedDate),
-                    widget: IconButton(
-                      icon: const Icon(
-                        Icons.calendar_today_outlined,
-                        color: Colors.grey,
-                      ),
-                      onPressed: () => _getDateFromUser(),
+        body: Container(
+          margin: EdgeInsets.only(top: SizeConfig.screenHeight * 0.02),
+          padding:
+              EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.05),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin:
+                      EdgeInsets.only(bottom: SizeConfig.screenHeight * 0.03),
+                  child: Text("Add Task", style: haedingStyle),
+                ),
+                //=============== Write your Task ===============
+                InputField(
+                  title: "Task",
+                  hint: "Write a task",
+                  controller: _taskFormController,
+                  suggestions: true,
+                  capitalization: TextCapitalization.sentences,
+                ),
+                //=============== Choose A Date ===============
+                InputField(
+                  title: "Date",
+                  suggestions: false,
+                  capitalization: TextCapitalization.none,
+                  hint: DateFormat.yMd().format(_selectedDate),
+                  widget: IconButton(
+                    icon: const Icon(
+                      Icons.calendar_today_outlined,
+                      color: Colors.grey,
                     ),
+                    onPressed: () => _getDateFromUser(),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: InputField(
-                          title: "Start Time",
-                          hint: _startTime,
-                          widget: IconButton(
-                            icon: const Icon(
-                              Icons.access_time_rounded,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () =>
-                                _getTimeFromUser(isStartTime: true),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: InputField(
-                          title: "End Time",
-                          hint: _endTime,
-                          widget: IconButton(
-                            icon: const Icon(
-                              Icons.access_time_rounded,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () =>
-                                _getTimeFromUser(isStartTime: false),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  InputField(
-                    title: "Remind",
-                    hint: "$_selectedRemind minutes early",
-                    widget: Row(
-                      children: <Widget>[
-                        DropdownButton(
-                          dropdownColor: Colors.grey[500],
-                          borderRadius: BorderRadius.circular(10),
-                          items: remindList
-                              .map<DropdownMenuItem<String>>(
-                                (int value) => DropdownMenuItem<String>(
-                                  value: value.toString(),
-                                  child: Text(
-                                    "$value",
-                                    style: bodyStyle3,
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                ),
+                //=============== Start Time & End Time Of The Task ===============
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: InputField(
+                        title: "Start Time",
+                        suggestions: false,
+                        capitalization: TextCapitalization.none,
+                        hint: _startTime,
+                        widget: IconButton(
                           icon: const Icon(
-                            Icons.keyboard_arrow_down,
+                            Icons.access_time_rounded,
                             color: Colors.grey,
                           ),
-                          iconSize: 32,
-                          elevation: 4,
-                          underline: Container(height: 0),
-                          style: subTitleStyle,
-                          onChanged: (String? newVal) {
-                            setState(() {
-                              _selectedRemind = int.parse(newVal!);
-                            });
-                          },
+                          onPressed: () => _getTimeFromUser(isStartTime: true),
                         ),
-                        const SizedBox(width: 6),
-                      ],
+                      ),
                     ),
-                  ),
-                  InputField(
-                    title: "Repeat",
-                    hint: _selectedRepeat,
-                    widget: Row(
-                      children: <Widget>[
-                        DropdownButton(
-                          borderRadius: BorderRadius.circular(10),
-                          dropdownColor: Colors.grey[500],
-                          items: repeatList
-                              .map<DropdownMenuItem<String>>(
-                                (String value) => DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style: bodyStyle3,
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                    SizedBox(width: SizeConfig.screenWidth * 0.04),
+                    Expanded(
+                      child: InputField(
+                        title: "End Time",
+                        hint: _endTime,
+                        suggestions: false,
+                        capitalization: TextCapitalization.none,
+                        widget: IconButton(
                           icon: const Icon(
-                            Icons.keyboard_arrow_down,
+                            Icons.access_time_rounded,
                             color: Colors.grey,
                           ),
-                          iconSize: 32,
-                          elevation: 4,
-                          underline: Container(height: 0),
-                          style: subTitleStyle,
-                          onChanged: (String? newVal) {
-                            setState(() {
-                              _selectedRepeat = newVal!;
-                            });
-                          },
+                          onPressed: () => _getTimeFromUser(isStartTime: false),
                         ),
-                        const SizedBox(width: 6),
-                      ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 18),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  ],
+                ),
+                //=============== Reminder ===============
+                InputField(
+                  title: "Remind",
+                  suggestions: false,
+                  capitalization: TextCapitalization.none,
+                  hint: "$_selectedRemind minutes early",
+                  widget: Row(
                     children: <Widget>[
-                      _colorPalette(),
-                      MyButton(
-                          label: "Create Task",
-                          onTap: () {
-                            _validateData();
-                          }),
+                      DropdownButton(
+                        dropdownColor: Colors.grey[500],
+                        borderRadius: BorderRadius.circular(10),
+                        items: remindList
+                            .map<DropdownMenuItem<String>>(
+                              (int value) => DropdownMenuItem<String>(
+                                value: value.toString(),
+                                child: Text(
+                                  "$value",
+                                  style: bodyStyle3,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Colors.grey,
+                        ),
+                        iconSize: 32,
+                        elevation: 4,
+                        underline: Container(height: 0),
+                        style: subTitleStyle,
+                        onChanged: (String? newVal) {
+                          setState(() {
+                            _selectedRemind = int.parse(newVal!);
+                          });
+                        },
+                      ),
+                      SizedBox(width: SizeConfig.screenWidth * 0.02),
                     ],
                   ),
-                ],
-              ),
+                ),
+                //=============== Times Of Repeating The Task ===============
+                InputField(
+                  title: "Repeat",
+                  suggestions: false,
+                  capitalization: TextCapitalization.none,
+                  hint: _selectedRepeat,
+                  widget: Row(
+                    children: <Widget>[
+                      DropdownButton(
+                        borderRadius: BorderRadius.circular(10),
+                        dropdownColor: Colors.grey[500],
+                        items: repeatList
+                            .map<DropdownMenuItem<String>>(
+                              (String value) => DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: bodyStyle3,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Colors.grey,
+                        ),
+                        iconSize: 32,
+                        elevation: 4,
+                        underline: Container(height: 0),
+                        style: subTitleStyle,
+                        onChanged: (String? newVal) {
+                          setState(() {
+                            _selectedRepeat = newVal!;
+                          });
+                        },
+                      ),
+                      SizedBox(width: SizeConfig.screenWidth * 0.02),
+                    ],
+                  ),
+                ),
+                SizedBox(height: SizeConfig.screenHeight * 0.03),
+                //=============== Task Color & Create Task Button ===============
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    _colorPalette(),
+                    MyButton(
+                        label: "Create Task",
+                        onTap: () {
+                          _validateData();
+                        }),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -197,10 +212,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-//==================== Customize AppBar ====================
+//==================== Customized AppBar ====================
   AppBar _appBar() {
     return AppBar(
       backgroundColor: context.theme.colorScheme.background,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        systemNavigationBarColor: Get.isDarkMode ? darkGreyClr : Colors.white,
+        statusBarColor: Get.isDarkMode ? darkGreyClr : Colors.white,
+      ),
+      centerTitle: true,
+      //=============== Back Button ===============
       leading: IconButton(
         icon: Icon(
           Icons.arrow_back_ios,
@@ -210,13 +231,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
         onPressed: () => Get.back(),
       ),
       elevation: 0,
-      actions: const <Widget>[
-        CircleAvatar(
-          backgroundImage: AssetImage('assets/images/person.jpeg'),
-          radius: 18,
-        ),
-        SizedBox(width: 20),
-      ],
     );
   }
 
@@ -267,13 +281,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
 //==================== Check Data Before Creating a Task ====================
   _validateData() {
-    if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
+    if (_taskFormController.text.isNotEmpty) {
       _addTasksToDb();
       Get.back();
-    } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
+    } else if (_taskFormController.text.isEmpty) {
       Get.snackbar(
         "Warning",
-        "All fields are required",
+        "Don't forget to write a task",
         titleText: Text("Warning",
             style: GoogleFonts.lato(
               textStyle: const TextStyle(
@@ -282,7 +296,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 color: Colors.white,
               ),
             )),
-        messageText: Text("All fields are required",
+        messageText: Text("Don't forget to write a task",
             style: GoogleFonts.lato(
               textStyle: const TextStyle(
                 fontSize: 18,
@@ -315,8 +329,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   _addTasksToDb() async {
     int value = await _taskController.addTask(
       task: Task(
-        title: _titleController.text,
-        note: _noteController.text,
+        taskText: _taskFormController.text,
         isCompleted: 0,
         date: DateFormat.yMd().format(_selectedDate),
         startTime: _startTime,

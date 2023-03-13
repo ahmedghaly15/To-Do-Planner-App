@@ -1,5 +1,6 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -51,10 +52,15 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
-//==================== Customize AppBar ====================
+//==================== Customized AppBar ====================
   AppBar _appBar() {
     return AppBar(
       backgroundColor: context.theme.colorScheme.background,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        systemNavigationBarColor: Get.isDarkMode ? darkGreyClr : Colors.white,
+        statusBarColor: Get.isDarkMode ? darkGreyClr : Colors.white,
+      ),
+      //=============== Change Theme Button ===============
       leading: IconButton(
         onPressed: () async {
           ThemeServices().switchTheme();
@@ -69,6 +75,7 @@ class _HomePageState extends State<HomePage> {
       ),
       elevation: 0,
       actions: <Widget>[
+        //=============== Delete All Tasks Button ===============
         IconButton(
           icon: Icon(
             Icons.cleaning_services_rounded,
@@ -77,19 +84,34 @@ class _HomePageState extends State<HomePage> {
           ),
           onPressed: () {
             if (_taskController.taskList.isEmpty) {
-              return;
+              _noTasksDialog();
             } else {
               _showConfirmBottomSheet();
             }
           },
         ),
-        const SizedBox(width: 5),
-        const CircleAvatar(
-          backgroundImage: AssetImage('assets/images/person.jpeg'),
-          radius: 18,
-        ),
-        const SizedBox(width: 20),
+        SizedBox(width: SizeConfig.screenWidth * 0.03),
       ],
+    );
+  }
+
+// ======================== Build Error Dialog Function =============================
+  void _noTasksDialog() {
+    Get.defaultDialog(
+      title: "Alert",
+      titleStyle: haedingStyle.copyWith(
+        color: Colors.white,
+        fontWeight: FontWeight.w800,
+      ),
+      middleText: "No task to delete",
+      middleTextStyle: titleStyle.copyWith(color: Colors.white),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.screenWidth * 0.02,
+        vertical: SizeConfig.screenHeight * 0.008,
+      ),
+      backgroundColor: primaryClr,
+      barrierDismissible: true,
+      radius: 20,
     );
   }
 
